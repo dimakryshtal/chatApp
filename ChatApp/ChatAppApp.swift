@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct ChatAppApp: App {
+    @StateObject private var authentication = Authentication()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(isLoggedIn: $authentication.isLoggedIn, auth: authentication)
         }
     }
 }
