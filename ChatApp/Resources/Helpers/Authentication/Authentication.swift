@@ -11,6 +11,7 @@ class Authentication: ObservableObject {
     @Published var isLoggedIn: Bool {
         didSet {
             UserDefaults.standard.set(isLoggedIn, forKey: "isLoggedIn")
+            print(isLoggedIn)
         }
     }
     
@@ -18,8 +19,8 @@ class Authentication: ObservableObject {
 //        isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
         isLoggedIn = false
     }
-        
+    
     func changeStatus() {
-        isLoggedIn = !isLoggedIn
+        isLoggedIn.toggle()
     }
 }

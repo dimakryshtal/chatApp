@@ -18,11 +18,13 @@ struct CircleImage: View {
             .overlay {
                 Circle().stroke(.white, lineWidth: 4)
             }
+            .shadow(color: .primaryColorPurple, radius: 2)
     }
 }
 
 struct CircleImage_Previews: PreviewProvider {
     static var previews: some View {
         CircleImage(image: Image("kitty"))
+            .frame(width: 200, height: 200, alignment: .center)
     }
 }

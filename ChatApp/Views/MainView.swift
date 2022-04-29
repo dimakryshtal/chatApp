@@ -6,34 +6,42 @@
 //
 
 import SwiftUI
+import SocketIO
 
 struct MainView: View {
-    @State private var tabSelection:Tab = .chats
-    @Binding var isLoggedIn: Bool
+    @StateObject private var chatsData = ChatsData(chat_ids: (UserDefaults.standard.value(forKey: "UserChats")) as! [Int])
+    @StateObject private var viewModel = MainViewViewModel()
+    
     
     enum Tab {
         case chats
         case profile
     }
     
+
     var body: some View {
-        TabView{
-            ChatList()
-                .tabItem {
-                       Label("Chats", systemImage: "mail")
-                }
-                .tag(Tab.chats)
-            
-            Profile(isLoggedIn: $isLoggedIn)
-                .tabItem {
-                    Label("Profile", systemImage: "person.crop.circle")
-                }
-        }
+            TabView{
+                ChatList()
+                    .tabItem {
+                        Label("Chats", systemImage: "mail")
+                    }
+                    .environmentObject(chatsData)
+                    .tag(Tab.chats)
+                
+                Profile()
+                    .tabItem {
+                        Label("Profile", systemImage: "person.crop.circle")
+                    }
+            }
+            .onAppear {
+                viewModel.initSocket(chatsData: chatsData)
+//                viewModel.initSocket(chatsData: chatsData)
+            }
     }
 }
 
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
-        MainView(isLoggedIn: .constant(true))
+        MainView()
     }
 }

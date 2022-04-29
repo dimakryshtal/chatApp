@@ -14,4 +14,5 @@ extension Color {
     static let secondaryColor = Color(0xEFF3FF)
     static let gradientColor1 = Color(0x743175)
     static let gradientColor2 = Color(0xB1529E)
+    static let chatUserColor = Color(0x9567C9)
 }

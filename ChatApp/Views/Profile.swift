@@ -20,7 +20,7 @@ struct ViewOffsetKey: PreferenceKey {
 struct Profile: View {
     @State private var pictureSize: CGFloat = 100
     @State private var isDragging: Bool = false
-    @Binding var isLoggedIn: Bool
+    @EnvironmentObject var homeWindowViewModel: HomeWindowViewModel
     
     var drag: some Gesture {
         var previousGesture:CGFloat = 0.0
@@ -31,7 +31,7 @@ struct Profile: View {
                     let newSize = pictureSize + sizeDelta
                     
                     if sizeDelta > 0 {
-                        pictureSize = newSize < 370 ? newSize : 370
+                        pictureSize = newSize < 300 ? newSize : 300
                     } else if (sizeDelta < 0) {
                         pictureSize = newSize > 100 ? newSize : 100
                     }
@@ -41,30 +41,31 @@ struct Profile: View {
                 }
                 .onEnded { _ in
                     isDragging = false
-                    
                 }
     }
     
     var body: some View {
         
         VStack {
-            AdaptiveStack (fullPicture: .constant(true)) {
-                Image("kitty")
-                    .resizable()
-                    .scaledToFill()
-                    .clipShape(Circle())
-                    .overlay(Circle()
-                        .stroke(Color(0x743175), lineWidth: 4))
-                    .frame(width: pictureSize, height: pictureSize, alignment: .center)
+                
+                VStack {
+                    Text("Meow Meow")
+                        .font(.system(size: 25, weight: .medium, design: .default))
+                        .foregroundColor(Color(0xF4ECFA))
+                        .padding(.bottom, 30)
+                    
+                    CircleImage(image: Image("kitty"))
+                        .frame(width: pictureSize, height: pictureSize, alignment: .center)
 
-                TextView(text: "Meow Meow", width: .infinity, height: 50)
-                    .padding([.leading, .trailing, .bottom], 10)
-            }
+//                            .stroke(Color.primaryColorPurple, lineWidth: 4))
+                }
+                .background(Circle()
+                    .fill(LinearGradient(colors: [.primaryColorPurple, .primaryColorPurple.opacity(0.1)], startPoint: .center, endPoint: .bottomTrailing))
+                    .frame(width: UIScreen.screenWidth * 1.6, height: UIScreen.screenWidth * 1.6)
+                    .offset(y:  -UIScreen.screenWidth * 0.7)
+                    .ignoresSafeArea())
             
-            .background(RoundedRectangle(cornerRadius: 40, style: .continuous)
-                .fill(LinearGradient(colors: [Color.gradientColor1, Color.gradientColor2], startPoint: .bottom, endPoint: .top))
-                .ignoresSafeArea()
-            )
+            
             
             
             List {
@@ -74,8 +75,11 @@ struct Profile: View {
                             Text("\(index)")
                         }
                         Button ("Log Out") {
+                            Socket.shared.disconnect()
                             withAnimation {
-                                isLoggedIn = false
+                                UserDefaults.standard.set(nil, forKey: "Current user")
+                                homeWindowViewModel.authentication.changeStatus()
+                                homeWindowViewModel.homeWindowIsShown = true
                             }
                         }
                         .buttonStyle(CustomButtonStyle())
@@ -102,7 +106,8 @@ struct Profile: View {
 
 struct Profile_Previews: PreviewProvider {
     static var previews: some View {
-        Profile(isLoggedIn: .constant(true))
+        Profile()
+            .environmentObject(HomeWindowViewModel(auth: Authentication()))
             .previewInterfaceOrientation(.portrait)
     }
 }

@@ -8,16 +8,16 @@
 import SwiftUI
 
 struct ContentView: View {
-    @Binding var isLoggedIn:Bool
-    @ObservedObject var auth: Authentication
+    @StateObject var homeWindowViewModel = HomeWindowViewModel(auth: Authentication())
+    
+    
 
     var body: some View {
-        if (!isLoggedIn) {
-            HomeWindow(auth: auth, isLoggedIn: $isLoggedIn)
-                .transition(.asymmetric(insertion: .move(edge: .top), removal: .move(edge: .bottom)))
+        if (homeWindowViewModel.homeWindowIsShown == true) {
+            HomeWindow(viewModel: homeWindowViewModel)
         } else {
-            MainView(isLoggedIn: $isLoggedIn)
-                .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .move(edge: .top)))
+            MainView()
+                .environmentObject(homeWindowViewModel)
         }
         
     }
@@ -25,6 +25,9 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(isLoggedIn:.constant(false),  auth: Authentication())
+//        ContentView(isLoggedIn:.constant(false),  auth: Authentication())
+        
+        ContentView()
+            
     }
 }

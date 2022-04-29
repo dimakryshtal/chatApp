@@ -13,7 +13,9 @@ struct ChatAppApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView(isLoggedIn: $authentication.isLoggedIn, auth: authentication)
+//            ContentView(isLoggedIn: $authentication.isLoggedIn, auth: authentication)
+            ContentView()
+                .environmentObject(authentication)
         }
     }
 }

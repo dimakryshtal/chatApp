@@ -9,20 +9,23 @@ import SwiftUI
 
 struct ChatRow: View {
     var body: some View {
-        HStack (alignment: .top, spacing: 15) {
-            CircleImage(image: Image("kitty"))
-                .frame(width: 70, height: 70, alignment: .center)
+        ZStack {
+            HStack (alignment: .top, spacing: 15) {
+                CircleImage(image: Image("kitty"))
+                    .frame(width: 70, height: 70, alignment: .center)
 
-                
-            VStack(alignment: .leading, spacing: 5)  {
-                Text("Name Name")
-                    .font(.title)
-                Text("Last Message")
-                
-                
+                    
+                VStack(alignment: .leading, spacing: 5)  {
+                    Text("Name Name")
+                        .font(.title)
+                    Text("Last Message")
+                    
+                    
+                }
+                Spacer()
             }
-            Spacer()
         }
+//        .padding([.leading, .trailing], 10)
     }
 }
 

@@ -8,18 +8,11 @@
 import Foundation
 
 struct User: Codable {
+    var user_id: Int?
     var firstName: String
     var lastName: String
     var username: String
     var email: String
     var password: String?
-    
-//    enum CodingKeys: String, CodingKey {
-//        case username
-//        case firstName
-//        case lastName
-//        case email
-//        case password
-//    }
-    
+    var userChats: [Int]?
 }
