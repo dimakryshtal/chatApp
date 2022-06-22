@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 protocol ChatRoomsNetworkManagerDelegate {
-    func loadUserChatRooms(arrayOfChatIDs: [Int]) -> AnyPublisher <ChatRoomsResponse, Error>
+    func loadUserChatRooms(arrayOfChatIDs: [String]) -> AnyPublisher <ChatRoomsResponse, Error>
 }
 
 final class ChatRoomNetworkManager {
@@ -28,7 +28,7 @@ extension ChatRoomNetworkManager: ChatRoomsNetworkManagerDelegate {
       case network(description: String)
     }
     
-    func loadUserChatRooms(arrayOfChatIDs: [Int]) -> AnyPublisher<ChatRoomsResponse, Error> {
+    func loadUserChatRooms(arrayOfChatIDs: [String]) -> AnyPublisher<ChatRoomsResponse, Error> {
         let urlString = "http:/localhost:8080/loadchats?id=\(arrayOfChatIDs.map({String($0)}).joined(separator: ","))"
         
         guard let components = URLComponents(string: urlString), let url = components.url else {

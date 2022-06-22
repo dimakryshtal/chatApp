@@ -7,20 +7,26 @@
 
 import Foundation
 
-struct Message: Codable, Hashable, Identifiable {
-    var id: Int
-    var user_id: Int
-    var chat_id: Int
+struct Message: Codable, Identifiable, Equatable {
+    var id: String
+    var user_id: String
+    var chat_id: String
     var message: String
-    var date: Date?
+    var date: String?
+    var pending: Bool?
     
-    enum CodingKeys: String, CodingKey {
-        case id = "message_id"
+    private enum CodingKeys: String, CodingKey {
+        case id = "_id"
         case user_id
         case chat_id
         case message
-        case  date
+        case date
+        case pending
     }
     
-    static var defaultMessage = Message(id: 0, user_id: 0, chat_id: 0, message: "test")
+    static var defaultMessage = Message(id: "000000000.0.0", user_id: "1111", chat_id: "00000.0", message: "test")
+    
+    mutating func changeMessageStatus() {
+        pending = nil
+    }
 }

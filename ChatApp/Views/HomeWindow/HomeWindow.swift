@@ -9,9 +9,13 @@ import SwiftUI
 
 struct HomeWindow: View {
 //    @EnvironmentObject var authentication: Authentication
-    @ObservedObject var viewModel: HomeWindowViewModel
+    @StateObject var viewModel: HomeWindowViewModel
     @State private var showingSheet = false
     @State private var showAuthInterface = true
+    
+    init(auth: Authentication) {
+        _viewModel = StateObject(wrappedValue: HomeWindowViewModel(auth: auth))
+    }
     
     var body: some View {
             ZStack (alignment: .top){
@@ -30,7 +34,7 @@ struct HomeWindow: View {
                     if (showAuthInterface) {
                         FieldWithImage(imageName: "person", fieldName: "Username", textValue: $viewModel.authenticator)
                             .frame(height: 60)
-                        FieldWithImage(imageName: "lock", fieldName: "Password", textValue: $viewModel.password)
+                        SecretFieldWithImage(fieldName: "Password", textValue: $viewModel.password)
                             .frame(height: 60)
                         
                         Button("Log In") {
@@ -67,8 +71,7 @@ struct HomeWindow: View {
 
 struct HomeWindow_Previews: PreviewProvider {
     static var previews: some View {
-        HomeWindow(viewModel: HomeWindowViewModel(auth: Authentication()))
-//            .environmentObject(Authentication())
+        HomeWindow(auth: Authentication())
     }
 }
 

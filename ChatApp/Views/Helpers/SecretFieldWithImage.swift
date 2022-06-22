@@ -9,16 +9,20 @@ import SwiftUI
 
 struct SecretFieldWithImage: View {
     var fieldName: String
+    var lineWidth: CGFloat = 0
     @Binding var textValue: String
     var body: some View {
         HStack{
             Image(systemName: "lock")
-                .frame(width: 15, height: 20)
-            TextField(fieldName, text: $textValue)
-                .frame(height: 40)
+                .foregroundColor(.gray)
+                .aspectRatio(contentMode: .fit)
+            
+            SecureField(fieldName, text: $textValue)
+                .foregroundColor(.gray)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .padding(.leading, 10)
-        .background(rect(lineWidth: 4))
+        .padding(.leading, 15)
+        .background(rect(lineWidth: lineWidth))
         
     }
 }

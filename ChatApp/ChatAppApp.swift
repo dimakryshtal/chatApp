@@ -7,15 +7,11 @@
 
 import SwiftUI
 
-@main
+ @main
 struct ChatAppApp: App {
-    @StateObject private var authentication = Authentication()
-    
     var body: some Scene {
         WindowGroup {
-//            ContentView(isLoggedIn: $authentication.isLoggedIn, auth: authentication)
             ContentView()
-                .environmentObject(authentication)
         }
     }
 }

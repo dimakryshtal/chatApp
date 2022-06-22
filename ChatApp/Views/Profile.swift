@@ -20,7 +20,8 @@ struct ViewOffsetKey: PreferenceKey {
 struct Profile: View {
     @State private var pictureSize: CGFloat = 100
     @State private var isDragging: Bool = false
-    @EnvironmentObject var homeWindowViewModel: HomeWindowViewModel
+    @EnvironmentObject var authentication: Authentication
+    @EnvironmentObject var chatsData: ChatsData
     
     var drag: some Gesture {
         var previousGesture:CGFloat = 0.0
@@ -49,7 +50,7 @@ struct Profile: View {
         VStack {
                 
                 VStack {
-                    Text("Meow Meow")
+                    Text("\(UserData.shared.getUserName())")
                         .font(.system(size: 25, weight: .medium, design: .default))
                         .foregroundColor(Color(0xF4ECFA))
                         .padding(.bottom, 30)
@@ -77,9 +78,9 @@ struct Profile: View {
                         Button ("Log Out") {
                             Socket.shared.disconnect()
                             withAnimation {
-                                UserDefaults.standard.set(nil, forKey: "Current user")
-                                homeWindowViewModel.authentication.changeStatus()
-                                homeWindowViewModel.homeWindowIsShown = true
+                                UserData.shared.saveData(user: nil)
+                                authentication.changeStatus()
+                                authentication.changeHomeWindowStatus()
                             }
                         }
                         .buttonStyle(CustomButtonStyle())
@@ -107,7 +108,6 @@ struct Profile: View {
 struct Profile_Previews: PreviewProvider {
     static var previews: some View {
         Profile()
-            .environmentObject(HomeWindowViewModel(auth: Authentication()))
             .previewInterfaceOrientation(.portrait)
     }
 }

@@ -20,3 +20,12 @@ struct CustomButtonStyle: ButtonStyle {
             .cornerRadius(30)
     }
 }
+
+struct CustomListButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            .contentShape(Rectangle())
+            .background(Color.black.opacity(configuration.isPressed ? 0.1 : 0.0))
+    }
+}

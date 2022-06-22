@@ -8,16 +8,14 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var homeWindowViewModel = HomeWindowViewModel(auth: Authentication())
-    
-    
+    @StateObject private var authenticaion = Authentication()
 
     var body: some View {
-        if (homeWindowViewModel.homeWindowIsShown == true) {
-            HomeWindow(viewModel: homeWindowViewModel)
+        if (authenticaion.homeWindowIsShown == true) {
+            HomeWindow(auth: authenticaion)
         } else {
             MainView()
-                .environmentObject(homeWindowViewModel)
+                .environmentObject(authenticaion)
         }
         
     }
@@ -25,9 +23,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-//        ContentView(isLoggedIn:.constant(false),  auth: Authentication())
-        
         ContentView()
-            
     }
 }

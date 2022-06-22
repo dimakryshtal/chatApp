@@ -8,6 +8,7 @@
 import Foundation
 
 class Authentication: ObservableObject {
+    @Published var homeWindowIsShown: Bool
     @Published var isLoggedIn: Bool {
         didSet {
             UserDefaults.standard.set(isLoggedIn, forKey: "isLoggedIn")
@@ -16,11 +17,15 @@ class Authentication: ObservableObject {
     }
     
     init() {
-//        isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
-        isLoggedIn = false
+        isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
+        homeWindowIsShown = true
     }
     
     func changeStatus() {
         isLoggedIn.toggle()
+    }
+    
+    func changeHomeWindowStatus() {
+        homeWindowIsShown.toggle()
     }
 }

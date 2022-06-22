@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 protocol NetworkManagerDelegate {
-    func createNewUser(requestBody: User) -> AnyPublisher <CreateUserResponse, Error>
+    func createNewUser(requestBody: User) -> AnyPublisher <SuccessResponse, Error>
     func login(requestBody: [String: String]) -> AnyPublisher<LoginResponse, Error>
 }
 
@@ -29,8 +29,49 @@ extension UserNetworkManager: NetworkManagerDelegate {
       case network(description: String)
     }
     
+    func getUsers(query: String) -> AnyPublisher<[User], Error> {
+        var urlString = "http://localhost:8080/\(query)"
+        
+        
+        
+//        print(urlString)
+        guard let components = URLComponents(string: urlString), let url = components.url else {
+            return Fail(error:  NetworkError.network(description: "Error creating user")).eraseToAnyPublisher()
+        }
+        
+        let request = URLRequest(url: url)
+        
+        return URLSession.shared.dataTaskPublisher(for: request)
+            .print()
+            .map(\.data)
+            .decode(type: [User].self, decoder: decoder)
+            .receive(on: RunLoop.main)
+            .eraseToAnyPublisher()
+        
+    }
+    
+    func updateCurrentUser<T: Encodable>(username: String, requestBody: [String: T]) -> AnyPublisher<SuccessResponse, Error> {
+        let urlString = "http:/localhost:8080/updatedata/\(username)"
+        
+        guard let components = URLComponents(string: urlString), let url = components.url else {
+            return Fail(error:  NetworkError.network(description: "Error creating user")).eraseToAnyPublisher()
+        }
+        
+        var request = URLRequest(url: url)
+        
+        request.httpMethod = "PUT"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.httpBody = try? encoder.encode(requestBody)
+        
+        return URLSession.shared.dataTaskPublisher(for: request)
+           .map(\.data)
+           .decode(type: SuccessResponse.self, decoder: decoder)
+           .eraseToAnyPublisher()
+        }
+    
     //REGISTER
-    func createNewUser(requestBody: User) -> AnyPublisher<CreateUserResponse, Error> {
+    func createNewUser(requestBody: User) -> AnyPublisher<SuccessResponse, Error> {
            let urlString = "http:/localhost:8080/register"
            
            guard let components = URLComponents(string: urlString), let url = components.url else {
@@ -45,7 +86,7 @@ extension UserNetworkManager: NetworkManagerDelegate {
            
             return URLSession.shared.dataTaskPublisher(for: request)
                .map(\.data)
-               .decode(type: CreateUserResponse.self, decoder: decoder)
+               .decode(type: SuccessResponse.self, decoder: decoder)
                .eraseToAnyPublisher()
        }
     //LOGIN
@@ -63,6 +104,7 @@ extension UserNetworkManager: NetworkManagerDelegate {
         request.httpBody = try? encoder.encode(requestBody)
         
         return URLSession.shared.dataTaskPublisher(for: request)
+            .print()
             .map(\.data)
             .decode(type: LoginResponse.self, decoder: JSONDecoder())
             .eraseToAnyPublisher()

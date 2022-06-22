@@ -7,14 +7,17 @@
 
 import SwiftUI
 import SocketIO
+import Introspect
 
 struct MainView: View {
-    @StateObject private var chatsData = ChatsData(chat_ids: (UserDefaults.standard.value(forKey: "UserChats")) as! [Int])
-    @StateObject private var viewModel = MainViewViewModel()
+    @StateObject private var chatsData = ChatsData(chat_ids: UserData.shared.getUserChats())
+    @StateObject private var messagesData = MessagesData(chat_ids: UserData.shared.getUserChats())
+    @StateObject private var friendsData = FriendsData(friendsIds: UserData.shared.getUserFriends())
     
-    
+    @State var tabSelection:Tab = .chats
     enum Tab {
         case chats
+        case friends
         case profile
     }
     
@@ -25,18 +28,33 @@ struct MainView: View {
                     .tabItem {
                         Label("Chats", systemImage: "mail")
                     }
-                    .environmentObject(chatsData)
                     .tag(Tab.chats)
+                
+                Friends()
+                    .tabItem {
+                        Label("Friends", systemImage: "person.2.fill")
+                    }
+                    .tag(Tab.friends)
+                
                 
                 Profile()
                     .tabItem {
                         Label("Profile", systemImage: "person.crop.circle")
                     }
+                    .tag(Tab.profile)
             }
+            .environmentObject(chatsData)
+            .environmentObject(messagesData)
+            .environmentObject(friendsData)
             .onAppear {
-                viewModel.initSocket(chatsData: chatsData)
-//                viewModel.initSocket(chatsData: chatsData)
+                initSocket()
             }
+
+    }
+    
+    func initSocket() {
+        Socket.shared.connectToSocketServer()
+        Socket.shared.initChats(chats: chatsData, messages: messagesData)
     }
 }
 

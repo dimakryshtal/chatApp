@@ -6,9 +6,12 @@
 //
 
 import SwiftUI
+import Combine
 
 struct ChatList: View {
     @EnvironmentObject var chatsData: ChatsData
+    @EnvironmentObject var messagesData: MessagesData
+    @State private var selectedChat: ChatRoom?
     
     var body: some View {
         NavigationView{
@@ -16,15 +19,26 @@ struct ChatList: View {
                 Color.blue.opacity(0.03)
                     .ignoresSafeArea()
                 List {
-                    ForEach(chatsData.chats, id: \.self) { chat in
-                        NavigationLink {
-                            Chat(chatData: chat, messages: $chatsData.messages)
+                    ForEach(chatsData.chats) { chat in
+                        
+                        Button {
+                            selectedChat = chat
                         } label: {
-                            ChatRow()
+                            ChatRow(chatRoom: chat)
+                                
                         }
+                        .listRowInsets(EdgeInsets())
+                        .buttonStyle(CustomListButtonStyle())
+                        
+                        
                     }
                     .listRowBackground(Color.clear)
+                    .fullScreenCover(item: $selectedChat, content: { item in
+
+                        Chat(chatRoom: item, messages: messagesData, name: item.chatName ?? "User")
+                    })
                     
+
                 }
                 .frame(maxWidth: .infinity)
                 .listStyle(.plain)
@@ -32,13 +46,12 @@ struct ChatList: View {
             .navigationTitle("Chats")
             .navigationBarTitleDisplayMode(.inline)
         }
-        .onAppear {
-        }
     }
 }
 
 struct ChatList_Previews: PreviewProvider {
     static var previews: some View {
         ChatList().preferredColorScheme(.light)
+            .environmentObject(ChatsData(chat_ids: ["00000.0"]))
     }
 }

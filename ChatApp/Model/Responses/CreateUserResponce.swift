@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CreateUserResponse: Codable {
+struct SuccessResponse: Codable {
     var result: String
     var message: String
 }

@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 protocol MessagesNetworkManagerDelegate {
-    func loadMessages(chat_id: Int) -> AnyPublisher<MessagesResponse, Error>
+    func loadMessages(chat_id: String) -> AnyPublisher<MessagesResponse, Error>
 }
 
 final class MessagesNetworkManager {
@@ -23,7 +23,7 @@ extension MessagesNetworkManager:  MessagesNetworkManagerDelegate {
       case parsing(description: String)
       case network(description: String)
     }
-    func loadMessages(chat_id: Int) -> AnyPublisher<MessagesResponse, Error> {
+    func loadMessages(chat_id: String) -> AnyPublisher<MessagesResponse, Error> {
         let urlString = "http://localhost:8080/messagesfrom/\(chat_id)"
         
         guard let components = URLComponents(string: urlString), let url = components.url else {

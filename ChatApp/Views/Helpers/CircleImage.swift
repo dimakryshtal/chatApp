@@ -18,7 +18,7 @@ struct CircleImage: View {
             .overlay {
                 Circle().stroke(.white, lineWidth: 4)
             }
-            .shadow(color: .primaryColorPurple, radius: 2)
+//            .shadow(color: .primaryColorPurple, radius: 2)
     }
 }
 

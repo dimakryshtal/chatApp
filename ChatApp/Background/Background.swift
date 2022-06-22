@@ -57,21 +57,5 @@ struct Background_Previews: PreviewProvider {
                    screenHeight: 844)
             .previewDevice(PreviewDevice(rawValue: "iPhone 13"))
             .previewDisplayName("iPhone 13")
-        
-//        Background(showBackground: .constant(true),
-//                   parallelogramFrameHeight: 428,
-//                   sectionAngle: 45,
-//                   screenWidth: 428,
-//                   screenHeight: 926)
-//            .previewDevice(PreviewDevice(rawValue: "iPhone 13 Pro Max"))
-//            .previewDisplayName("iPhone 13 Pro Max")
-//
-//        Background(showBackground: .constant(true),
-//                   parallelogramFrameHeight: 375,
-//                   sectionAngle: 45,
-//                   screenWidth: 375,
-//                   screenHeight: 667)
-//            .previewDevice(PreviewDevice(rawValue: "iPhone 8"))
-//            .previewDisplayName("iPhone 8")
     }
 }
